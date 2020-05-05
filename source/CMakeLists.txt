@@ -24,4 +24,5 @@ target_link_libraries(tests
   ${OPENGL_LIBRARIES}
   )
 
-
+# generate compile_commands.json
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
