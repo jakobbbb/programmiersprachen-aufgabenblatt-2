@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_RUNNER
 #include "vec2.hpp"
+#include "mat2.hpp"
 #include <catch.hpp>
 #include <cmath>
 
@@ -106,4 +107,50 @@ TEST_CASE("vec2 multiple ops", "[vec2]") {
   REQUIRE(c.x == Approx(b.x - ((a.x + (f * b.x)) / g)));
   REQUIRE(c.y == Approx(b.y - ((a.y + (f * b.y)) / g)));
 }
+
+TEST_CASE("mat2 constructor", "[mat2]") {
+  const Mat2 i{};
+  REQUIRE(i.e_00 == 1.0f);
+  REQUIRE(i.e_10 == 0.0f);
+  REQUIRE(i.e_01 == 0.0f);
+  REQUIRE(i.e_11 == 1.0f);
+  const Mat2 a{-1.3f, 5.2f, 0.3f, 0.0f};
+  REQUIRE(a.e_00 == Approx(-1.3f));
+  REQUIRE(a.e_10 == Approx(5.2f));
+  REQUIRE(a.e_01 == Approx(0.3f));
+  REQUIRE(a.e_11 == 0.0f);
+}
+
+TEST_CASE("mat2 *=", "[mat2]") {
+  const Mat2 a{-6.6f, 8.5f, 3.6f, -0.5f};
+  const Mat2 b{4.2f, -9.3f, 5.2f, -6.2f};
+  Mat2 c{a};
+  c *= b;  // c = a * b
+  REQUIRE(c.e_00 == Approx(16.48f));
+  REQUIRE(c.e_01 == Approx(12.52f));
+  REQUIRE(c.e_10 == Approx(8.68f));
+  REQUIRE(c.e_11 == Approx(-30.38f));
+  Mat2 d{c};
+  d *= Mat2{};
+  REQUIRE(d.e_00 == Approx(16.48f));
+  REQUIRE(d.e_01 == Approx(12.52f));
+  REQUIRE(d.e_10 == Approx(8.68f));
+  REQUIRE(d.e_11 == Approx(-30.38f));
+}
+
+TEST_CASE("mat2 *", "[mat2]") {
+  const Mat2 a{-6.6f, 8.5f, 3.6f, -0.5f};
+  const Mat2 b{4.2f, -9.3f, 5.2f, -6.2f};
+  Mat2 c = a * b;
+  REQUIRE(c.e_00 == Approx(16.48f));
+  REQUIRE(c.e_01 == Approx(12.52f));
+  REQUIRE(c.e_10 == Approx(8.68f));
+  REQUIRE(c.e_11 == Approx(-30.38f));
+  Mat2 d = Mat2{} * c;
+  REQUIRE(d.e_00 == Approx(16.48f));
+  REQUIRE(d.e_01 == Approx(12.52f));
+  REQUIRE(d.e_10 == Approx(8.68f));
+  REQUIRE(d.e_11 == Approx(-30.38f));
+}
+
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }
