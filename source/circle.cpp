@@ -14,6 +14,10 @@ float Circle::circumference() const {
 }
 
 void Circle::draw(Window const& win) const {
+  draw(win, DEFAULT_DRAW_THICKNESS);
+}
+
+void Circle::draw(Window const& win, float thickness) const {
   for (int i = 0; i < CIRCLE_LINE_SEGMENTS; ++i) {
     float phi_q = (i+0.f)/CIRCLE_LINE_SEGMENTS * M_PI * 2;
     float phi_p = (i+1.f)/CIRCLE_LINE_SEGMENTS * M_PI * 2;
@@ -22,7 +26,7 @@ void Circle::draw(Window const& win) const {
     win.draw_line(
       p.x, p.y,
       q.x, q.y,
-      color_.r, color_.g, color_.b
+      color_.r, color_.g, color_.b, thickness
     );
   }
 }

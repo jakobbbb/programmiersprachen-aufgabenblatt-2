@@ -18,12 +18,12 @@ int main(int argc, char* argv[])
       win.close();
     }
 
-    circ.draw(win);
-    rect.draw(win);
-
     bool left_pressed = win.get_mouse_button(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
     auto t = win.get_time();
+
+    circ.draw(win, 1.5 + std::cos(2 * M_PI * t));
+    rect.draw(win, 2.5f);
 
     float x1 = 400.f + 380.f * std::sin(t);
     float y1 = 400.f + 380.f * std::cos(t);

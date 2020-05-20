@@ -5,6 +5,8 @@
 #include <array>
 #include <string>
 
+#define DEFAULT_DRAW_THICKNESS 1.0
+
 struct NVGcontext;
 struct GLFWwindow;
 
@@ -19,7 +21,7 @@ public:
   void draw_line(float startX, float startY,
                 float endX, float endY,
                 float r, float g, float b,
-                float thickness = 1.0
+                float thickness = DEFAULT_DRAW_THICKNESS
                 ) const;
 
 

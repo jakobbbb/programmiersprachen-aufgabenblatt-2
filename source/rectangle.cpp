@@ -12,30 +12,31 @@ float Rectangle::circumference() const {
   return 2 * (dx + dy);
 }
 
+
 void Rectangle::draw(Window const& win) const {
+  draw(win, DEFAULT_DRAW_THICKNESS);
+}
+
+void Rectangle::draw(Window const& win, float thickness) const {
   win.draw_line(
     min_.x, min_.y,
     min_.x, max_.y,
-    color_.r, color_.g, color_.b,
-    1.0
+    color_.r, color_.g, color_.b, thickness
   );
   win.draw_line(
     min_.x, min_.y,
     max_.x, min_.y,
-    color_.r, color_.g, color_.b,
-    1.0
+    color_.r, color_.g, color_.b, thickness
   );
   win.draw_line(
     max_.x, max_.y,
     min_.x, max_.y,
-    color_.r, color_.g, color_.b,
-    1.0
+    color_.r, color_.g, color_.b, thickness
   );
   win.draw_line(
     max_.x, max_.y,
     max_.x, min_.y,
-    color_.r, color_.g, color_.b,
-    1.0
+    color_.r, color_.g, color_.b, thickness
   );
   return;
 }
