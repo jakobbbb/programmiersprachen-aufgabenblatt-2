@@ -1,4 +1,6 @@
 #include "window.hpp"
+#include "circle.hpp"
+#include "rectangle.hpp"
 #include <GLFW/glfw3.h>
 #include <utility>
 #include <cmath>
@@ -8,10 +10,16 @@ int main(int argc, char* argv[])
 {
   Window win{std::make_pair(800,800)};
 
+  Circle circ{{600,600}, 200, {0.3, 1, 0.9}};
+  Rectangle rect{{100,100}, {200,300}, {1, 0, 0.9}};
+
   while (!win.should_close()) {
     if (win.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
       win.close();
     }
+
+    circ.draw(win);
+    rect.draw(win);
 
     bool left_pressed = win.get_mouse_button(GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
