@@ -1,4 +1,5 @@
 #include "vec2.hpp"
+#include <cmath>
 
 Vec2& Vec2::operator+=(Vec2 const& v) {
   x += v.x;
@@ -22,6 +23,10 @@ Vec2& Vec2::operator/=(float s) {
   x /= s;
   y /= s;
   return *this;
+}
+
+float Vec2::norm() const {
+  return std::sqrt(std::pow(x, 2) + std::pow(y, 2));
 }
 
 

@@ -30,3 +30,7 @@ void Circle::draw(Window const& win, float thickness) const {
     );
   }
 }
+
+bool Circle::is_inside(Vec2 const& p) const {
+  return (p - center_).norm() <= radius_;
+}

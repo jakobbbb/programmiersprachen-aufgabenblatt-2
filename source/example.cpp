@@ -22,8 +22,11 @@ int main(int argc, char* argv[])
 
     auto t = win.get_time();
 
-    circ.draw(win, 1.5 + std::cos(2 * M_PI * t));
-    rect.draw(win, 2.5f);
+    auto mouse_position = win.mouse_position();
+    Vec2 mouse{(float) mouse_position.first, (float) mouse_position.second};
+
+    circ.draw(win, (circ.is_inside(mouse) ? 2.f : 1.f) * (2.5 + 0.5 * std::cos(2 * M_PI * t)));
+    rect.draw(win, rect.is_inside(mouse) ? 3.f : 1.5f);
 
     float x1 = 400.f + 380.f * std::sin(t);
     float y1 = 400.f + 380.f * std::cos(t);
@@ -38,7 +41,6 @@ int main(int argc, char* argv[])
     win.draw_point(x2, y2, 0.0f, 1.0f, 0.0f);
     win.draw_point(x3, y3, 0.0f, 0.0f, 1.0f);
 
-    auto mouse_position = win.mouse_position();
     if (left_pressed) {
       win.draw_line(30.0f, 30.0f, // FROM pixel idx with coords (x=30, y=30)
                     mouse_position.first, mouse_position.second, // TO mouse position in pixel coords

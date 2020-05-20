@@ -40,3 +40,8 @@ void Rectangle::draw(Window const& win, float thickness) const {
   );
   return;
 }
+
+bool Rectangle::is_inside(Vec2 const& p) const {
+  return (min_.x < p.x && p.x < max_.x)
+      && (min_.y < p.y && p.y < max_.y);
+}
