@@ -153,6 +153,14 @@ TEST_CASE("mat2 *", "[mat2]") {
   REQUIRE(d.e_11 == Approx(-30.38f));
 }
 
+TEST_CASE("mat2 * vec2", "[mat2]") {
+  const Mat2 m{-1.3f, 5.2f, 0.3f, 0.0f};
+  const Vec2 v{-6.6f, 8.5f};
+  const Vec2 u = m * v;
+  REQUIRE(u.x == Approx(52.78));
+  REQUIRE(u.y == Approx(-1.98));
+}
+
 TEST_CASE("mat2 det", "[mat2]") {
   const Mat2 a{-1.3f, 5.2f, 0.3f, 0.0f};
   const Mat2 b{4.2f, -9.3f, 5.2f, -6.2f};
@@ -223,5 +231,16 @@ TEST_CASE("mat2 rotation matrix", "[mat2]") {
   REQUIRE(gamma_rot.e_10 == Approx(0.0f));
   REQUIRE(gamma_rot.e_11 == Approx(1.0f));
 }
+
+TEST_CASE("vec2 rotation", "[mat2]") {
+  const Vec2 u{4.2f, -3.1f};
+  const Vec2 v = rotation_matrix(1.2f) * u;
+  REQUIRE(v.x == Approx(4.41122f));
+  REQUIRE(v.y == Approx(2.79126f));
+  const Vec2 w = rotation_matrix(0.0f) * u;
+  REQUIRE(w.x == Approx(4.2f));
+  REQUIRE(w.y == Approx(-3.1f));
+}
+
 
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }

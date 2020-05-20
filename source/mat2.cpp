@@ -1,4 +1,5 @@
 #include "mat2.hpp"
+#include "vec2.hpp"
 #include <cmath>
 
 Mat2& Mat2::operator*=(Mat2 const& m) {
@@ -30,6 +31,11 @@ Mat2 operator*(Mat2 const& m, float s) {
   r.e_10 *= s;
   r.e_11 *= s;
   return r;
+}
+
+Vec2 operator*(Mat2 const& m, Vec2 const& v) {
+  return Vec2{m.e_00 * v.x + m.e_10 * v.y,
+              m.e_01 * v.x + m.e_11 * v.y};
 }
 
 Mat2 inverse(Mat2 const& m) {
