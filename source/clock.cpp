@@ -26,7 +26,11 @@ int main(int argc, char* argv[])
     outer.draw(win);
 
     int speed = left_pressed ? 100 : 1;
-    auto t = std::floor(win.get_time() * speed);
+    auto t = win.get_time() * speed;
+
+    auto pos = win.mouse_position();
+    if (!outer.is_inside({(float) pos.first, (float) pos.second}))
+      t = std::floor(t);
 
     float secs = std::fmod(t, 60);
     float mins = std::fmod(t / 60, 60);
