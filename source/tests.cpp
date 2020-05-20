@@ -2,6 +2,8 @@
 #include "vec2.hpp"
 #include "mat2.hpp"
 #include "color.hpp"
+#include "circle.hpp"
+#include "rectangle.hpp"
 #include <catch.hpp>
 #include <cmath>
 
@@ -252,6 +254,17 @@ TEST_CASE("color constructor", "[color]") {
   REQUIRE(purple.r == Approx(0.42f));
   REQUIRE(purple.g == Approx(0.09f));
   REQUIRE(purple.b == Approx(0.59f));
+}
+
+TEST_CASE("circle circumference", "[circle]") {
+  REQUIRE((Circle{{}, 4.2f, {}}).circumference() == Approx(26.3894f));
+  REQUIRE((Circle{{}, 0, {}}).circumference() == 0);
+  REQUIRE((Circle{{}, -4.2f, {}}).circumference() == Approx(26.3894f));
+}
+
+TEST_CASE("rectangle circumference", "[rectangle]") {
+  Rectangle r({4.2f, -1.4f}, {6.2f, 1.6f}, {});
+  REQUIRE(r.circumference() == Approx(10));
 }
 
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }
