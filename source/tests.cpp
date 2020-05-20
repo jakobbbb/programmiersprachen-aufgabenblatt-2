@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "vec2.hpp"
 #include "mat2.hpp"
+#include "color.hpp"
 #include <catch.hpp>
 #include <cmath>
 
@@ -242,5 +243,15 @@ TEST_CASE("vec2 rotation", "[mat2]") {
   REQUIRE(w.y == Approx(-3.1f));
 }
 
+TEST_CASE("color constructor", "[color]") {
+  Color grey;
+  REQUIRE(grey.r == Approx(0.5f));
+  REQUIRE(grey.g == Approx(0.5f));
+  REQUIRE(grey.b == Approx(0.5f));
+  Color purple{0.42f, 0.09f, 0.59f};
+  REQUIRE(purple.r == Approx(0.42f));
+  REQUIRE(purple.g == Approx(0.09f));
+  REQUIRE(purple.b == Approx(0.59f));
+}
 
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }
