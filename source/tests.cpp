@@ -267,4 +267,26 @@ TEST_CASE("rectangle circumference", "[rectangle]") {
   REQUIRE(r.circumference() == Approx(10));
 }
 
+TEST_CASE("circle is_inside", "[circle]") {
+  const Circle c{{0.f, 0.f}, 1, {}};  // unit circle
+  REQUIRE(c.is_inside(Vec2{0.f, 0.f}));
+  REQUIRE(c.is_inside(Vec2{0.5f, -0.5f}));
+  REQUIRE(c.is_inside(Vec2{1.f, 0.f}));
+  REQUIRE(!c.is_inside(Vec2{1.01f, 0.f}));
+  REQUIRE(!c.is_inside(Vec2{1.f, 0.01f}));
+  REQUIRE(!c.is_inside(Vec2{1.f, 1.f}));
+}
+
+TEST_CASE("rectangle is_inside", "[rectangle]") {
+  const Rectangle r{{-1.f, -1.f}, {1.f, 1.f}, {}};
+  REQUIRE(r.is_inside(Vec2{0.f, 0.f}));  // inside
+  REQUIRE(r.is_inside(Vec2{0.5f, -0.5f}));
+  REQUIRE(r.is_inside(Vec2{1.f, 1.f}));  // corner
+  REQUIRE(r.is_inside(Vec2{-1.f, 1.f}));
+  REQUIRE(r.is_inside(Vec2{1.f, -0.5f}));  // edge
+  REQUIRE(!r.is_inside(Vec2{1.01f, 0.f}));  // outside
+  REQUIRE(!r.is_inside(Vec2{1.f, 0.01f}));
+  REQUIRE(!r.is_inside(Vec2{2.f, 2.f}));
+}
+
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }
