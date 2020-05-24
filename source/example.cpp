@@ -4,14 +4,28 @@
 #include <GLFW/glfw3.h>
 #include <utility>
 #include <cmath>
+#include <vector>
 
 
 int main(int argc, char* argv[])
 {
   Window win{std::make_pair(800,800)};
 
-  Circle circ{{600,600}, 200, {0.3, 1, 0.9}};
-  Rectangle rect{{100,100}, {200,300}, {1, 0, 0.9}};
+  std::vector<Circle> circles;
+  std::vector<Rectangle> rectangles;
+
+  for (int i = 1; i <= 8; ++i) {
+    circles.push_back(Circle{
+        {(float) 60 * i + 50, (float) 700 - 30 * i},
+        (float) 50 + 20 * i,
+        {0.3, ((float)i)/8, 0.9}
+    });
+    rectangles.push_back(Rectangle{
+        {(float) 10 * i, (float) 15 * i},
+        {(float) 15 * i + 200, (float) 30 * i + 200},
+        {((float)i)/8, 0, 0.9}
+        });
+  }
 
   while (!win.should_close()) {
     if (win.get_key(GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -25,8 +39,10 @@ int main(int argc, char* argv[])
     auto mouse_position = win.mouse_position();
     Vec2 mouse{(float) mouse_position.first, (float) mouse_position.second};
 
-    circ.draw(win, (circ.is_inside(mouse) ? 2.f : 1.f) * (2.5 + 0.5 * std::cos(2 * M_PI * t)));
-    rect.draw(win, rect.is_inside(mouse) ? 3.f : 1.5f);
+    for (Circle circ : circles)
+      circ.draw(win, (circ.is_inside(mouse) ? 2.f : 1.f) * (2.5 + 0.5 * std::cos(2 * M_PI * t)));
+    for (Rectangle rect : rectangles)
+      rect.draw(win, rect.is_inside(mouse) ? 3.f : 1.5f);
 
     float x1 = 400.f + 380.f * std::sin(t);
     float y1 = 400.f + 380.f * std::cos(t);
