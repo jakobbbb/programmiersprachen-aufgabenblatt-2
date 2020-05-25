@@ -54,8 +54,12 @@ int main(int argc, char* argv[])
     float y3 = 400.f + 380.f * std::cos(t-10.f);
 
     win.draw_point(x1, y1, 1.0f, 0.0f, 0.0f);
-    win.draw_point(x2, y2, 0.0f, 1.0f, 0.0f);
-    win.draw_point(x3, y3, 0.0f, 0.0f, 1.0f);
+
+    Rectangle moving_rectangle{{x2-25, y2-25}, {x2+25, y2+25}, {0.f, 1.f, 1.f}};
+    moving_rectangle.draw(win, moving_rectangle.is_inside(mouse) ? 3.f : 1.f);
+
+    Circle moving_circle{{x3, y3}, 50.f, {1.f, 1.f, 0.f}};
+    moving_circle.draw(win, moving_circle.is_inside(mouse) ? 3.f : 1.f);
 
     if (left_pressed) {
       win.draw_line(30.0f, 30.0f, // FROM pixel idx with coords (x=30, y=30)
