@@ -1,6 +1,7 @@
 #include "mat2.hpp"
 #include "vec2.hpp"
 #include <cmath>
+#include <iostream>
 
 Mat2& Mat2::operator*=(Mat2 const& m) {
   Mat2 r = *this * m;
@@ -39,9 +40,13 @@ Vec2 operator*(Mat2 const& m, Vec2 const& v) {
 }
 
 Mat2 inverse(Mat2 const& m) {
-  float d = 1 / m.det();
-  return Mat2{d * m.e_11, d * -m.e_10,
-              d * -m.e_01, d * m.e_00};
+  float det = m.det();
+  if (det == 0.f) {
+    std::cerr << "Matrix cannot be inverted!  Returning unit matrix.";
+    return Mat2{};
+  }
+  return Mat2{ m.e_11 / det, -m.e_10 / det,
+              -m.e_01 / det,  m.e_00 / det};
 }
 
 Mat2 transpose(Mat2 const& m) {
