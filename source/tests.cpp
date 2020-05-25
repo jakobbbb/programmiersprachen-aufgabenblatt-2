@@ -167,9 +167,11 @@ TEST_CASE("mat2 * vec2", "[mat2]") {
 TEST_CASE("mat2 det", "[mat2]") {
   const Mat2 a{-1.3f, 5.2f, 0.3f, 0.0f};
   const Mat2 b{4.2f, -9.3f, 5.2f, -6.2f};
+  const Mat2 c{42.f, 0.f, 21.f, 0.f};
   const Mat2 i;
   REQUIRE(a.det() == Approx(-1.56f));
   REQUIRE(b.det() == Approx(22.32));
+  REQUIRE(c.det() == 0);
   REQUIRE(i.det() == 1);
 }
 
@@ -194,6 +196,14 @@ TEST_CASE("mat2 inverse", "[mat2]") {
   REQUIRE(i_inv.e_01 == 0);
   REQUIRE(i_inv.e_10 == 0);
   REQUIRE(i_inv.e_11 == 1);
+
+  // cannot be inverted, unit matrix should be returned
+  const Mat2 c{42.f, 0.f, 21.f, 0.f};
+  Mat2 c_inv = inverse(c);
+  REQUIRE(i_inv.e_00 == c_inv.e_00);
+  REQUIRE(i_inv.e_01 == c_inv.e_01);
+  REQUIRE(i_inv.e_10 == c_inv.e_10);
+  REQUIRE(i_inv.e_11 == c_inv.e_11);
 }
 
 TEST_CASE("mat2 transpose", "[mat2]") {
@@ -265,27 +275,37 @@ TEST_CASE("circle circumference", "[circle]") {
 TEST_CASE("rectangle circumference", "[rectangle]") {
   Rectangle r({4.2f, -1.4f}, {6.2f, 1.6f}, {});
   REQUIRE(r.circumference() == Approx(10));
+  Rectangle s({0.f, 0.f}, {0.f, 0.f}, {});
+  REQUIRE(s.circumference() == Approx(0));
+  Rectangle t({4.2f, 0.f}, {4.2f, 1.f}, {});
+  REQUIRE(t.circumference() == Approx(2));
 }
 
 TEST_CASE("circle is_inside", "[circle]") {
   const Circle c{{0.f, 0.f}, 1, {}};  // unit circle
-  REQUIRE(c.is_inside(Vec2{0.f, 0.f}));
-  REQUIRE(c.is_inside(Vec2{0.5f, -0.5f}));
-  REQUIRE(c.is_inside(Vec2{1.f, 0.f}));
+
+  REQUIRE(c.is_inside(Vec2{0.f, 0.f}));  // center
+  REQUIRE(c.is_inside(Vec2{0.5f, -0.5f}));  // inside
+  REQUIRE(c.is_inside(Vec2{1.f, 0.f}));  // on circumference
+
+  // outside
+  REQUIRE(!c.is_inside(Vec2{1.f, 1.f}));
+  REQUIRE(!c.is_inside(Vec2{.9f, .9f}));
   REQUIRE(!c.is_inside(Vec2{1.01f, 0.f}));
   REQUIRE(!c.is_inside(Vec2{1.f, 0.01f}));
-  REQUIRE(!c.is_inside(Vec2{1.f, 1.f}));
 }
 
 TEST_CASE("rectangle is_inside", "[rectangle]") {
   const Rectangle r{{-1.f, -1.f}, {1.f, 1.f}, {}};
+
   REQUIRE(r.is_inside(Vec2{0.f, 0.f}));  // inside
   REQUIRE(r.is_inside(Vec2{0.5f, -0.5f}));
   REQUIRE(r.is_inside(Vec2{1.f, 1.f}));  // corner
   REQUIRE(r.is_inside(Vec2{-1.f, 1.f}));
   REQUIRE(r.is_inside(Vec2{1.f, -0.5f}));  // edge
+
   REQUIRE(!r.is_inside(Vec2{1.01f, 0.f}));  // outside
-  REQUIRE(!r.is_inside(Vec2{1.f, 0.01f}));
+  REQUIRE(!r.is_inside(Vec2{0.f, 1.01f}));
   REQUIRE(!r.is_inside(Vec2{2.f, 2.f}));
 }
 
