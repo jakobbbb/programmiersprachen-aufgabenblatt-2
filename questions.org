@@ -1,0 +1,65 @@
+* Aufgabe 2.2
+Erklären Sie den Zweck der sogenannten /Include Guards/ im teilweise
+vorgegebenen Header ~vec2.hpp~. Was passiert, wenn Sie keine Include
+Guards verwenden und die Datei ~vec2.hpp~ versuchen zweimal zu
+inkludieren? Warum ist das so?
+
+- Der Preprocessor fügt an Stelle der ~#include~-direktiven den Inhalt
+  der Datei ein.
+- Beim mehrfachen inkludieren der ~vec2.hpp~ würde das ~struct Vec2~
+  dann allerdings mehrfach defniniert.
+- Dafür muss noch nichteinmal explizit zweimal inkludiert werden.
+  Die ~mat2.hpp~ inkludiert die ~vec2.hpp~, aber ~vec2.hpp~ wird
+  erneut in der ~test.cpp~ inkludiert:
+
+#+BEGIN_SRC
+In file included from /home/jakob/git/uni/programmiersprachen-aufgabenblatt-2/source/mat2.hpp:5,
+                 from /home/jakob/git/uni/programmiersprachen-aufgabenblatt-2/source/tests.cpp:3:
+/home/jakob/git/uni/programmiersprachen-aufgabenblatt-2/source/vec2.hpp:1:8: error: redefinition of ‘struct Vec2’
+    1 | struct Vec2 {
+      |        ^~~~
+#+END_SRC
+
+- Durch die /Include Guards/ wird bei der ersten Inklusion im
+  Präprozessor ein Makro ~VEC2_HPP~ definiert, danach gilt ~#ifndef
+  VEC2_HPP~ nicht mehr und es werden keine weiteren Inklusionen
+  vorgenommen.
+
+* Aufgabe 2.7
+Erklären Sie den Unterschied zwischen ~class~ und ~struct~. Was ist
+ein /Datentransferobjekt (DTO)/?
+
+Eine ~class~ zeichnet sich insb. durch teilw. private Memberattribute
+und Methoden auf Objekten der Klasse aus.  Eine Klasse soll bestimmte
+Aufgaben wegabstrahieren, z. B. kann sich ein ~Circle~ über die
+~draw~-Methode im Fenster zeichnen.
+
+Beim /DTO/ oder ~struct~ sind alle Member standardmäßig public,
+i. d. R. gibt es keine (oder sehr elementare) Methoden auf dem /DTO/.
+
+* Aufgabe 2.9
+Sollte Methode ~circumference()~ als ~const~ deklariert werden? Was
+ist im Zusammenhang der ~const~-Correctness der Unterschied zwischen
+einer Methode und einer freien Funktion?
+
+Ja, da sie das Objekt, auf dem sie aufgerufen wird nicht verändert.
+
+Die Deklaration der ~circumference()~-Methode:
+~float Circle::circumference() const;~
+
+Als freie Funktion sieht sie so aus:
+~float circumference(Circle const& c);~
+
+Analog zum ~const~ der Methode wird der Kreis hier als /const
+reference/ übergeben.
+
+Eine Methode, die den Kreis verändert, z.B. die Farbe wäre als Methode
+~void Circle::set_color();~ und als freie Funktion
+~void set_color(Circle& c)~.
+
+
+* Aufgabe 2.12
+Was bedeutet der Begriff /Überladen/ in C++?
+
+Mehrere Methoden mit gleichem Namen und Rückgabetyp, die sich in den
+Parametern (Anzahl und Typen) unterscheiden.
