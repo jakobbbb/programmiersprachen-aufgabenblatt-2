@@ -22,12 +22,18 @@ TEST_CASE("vec2 +=", "[vec2]") {
   a += b;
   REQUIRE(a.x == Approx(-6.6f + 4.2f));
   REQUIRE(a.y == Approx(8.5f - 9.3f));
+  a += Vec2{0.f, 0.f};
+  REQUIRE(a.x == Approx(-6.6f + 4.2f));
+  REQUIRE(a.y == Approx(8.5f - 9.3f));
 }
 
 TEST_CASE("vec2 -=", "[vec2]") {
   Vec2 a{-6.6f, 8.5f};
   Vec2 b{4.2f, -9.3f};
   a -= b;
+  REQUIRE(a.x == Approx(-6.6f - 4.2f));
+  REQUIRE(a.y == Approx(8.5f + 9.3f));
+  a -= Vec2{0.f, 0.f};
   REQUIRE(a.x == Approx(-6.6f - 4.2f));
   REQUIRE(a.y == Approx(8.5f + 9.3f));
 }
@@ -38,6 +44,12 @@ TEST_CASE("vec2 *=", "[vec2]") {
   a *= f;
   REQUIRE(a.x == Approx(-6.6f * f));
   REQUIRE(a.y == Approx(8.5f * f));
+  a *= 1;
+  REQUIRE(a.x == Approx(-6.6f * f));
+  REQUIRE(a.y == Approx(8.5f * f));
+  a *= 0;
+  REQUIRE(a.x == 0.f);
+  REQUIRE(a.y == 0.f);
 }
 
 TEST_CASE("vec2 /=", "[vec2]") {
@@ -46,6 +58,12 @@ TEST_CASE("vec2 /=", "[vec2]") {
   a /= f;
   REQUIRE(a.x == Approx(-6.6f / f));
   REQUIRE(a.y == Approx(8.5f / f));
+  a /= (1/f);
+  REQUIRE(a.x == Approx(-6.6f));
+  REQUIRE(a.y == Approx(8.5f));
+  a /= 1;
+  REQUIRE(a.x == Approx(-6.6f));
+  REQUIRE(a.y == Approx(8.5f));
 
   a /= 0;
   REQUIRE(std::isinf(a.x));
@@ -89,6 +107,9 @@ TEST_CASE("vec2 *", "[vec2]") {
   const Vec2 d = 0.0f * a;
   REQUIRE(d.x == 0.0f);
   REQUIRE(d.y == 0.0f);
+  const Vec2 e = 1.0f * a;
+  REQUIRE(e.x == Approx(a.x));
+  REQUIRE(e.y == Approx(a.y));
 }
 
 TEST_CASE("vec2 /", "[vec2]") {
@@ -166,6 +187,9 @@ TEST_CASE("mat2 * vec2", "[mat2]") {
   const Vec2 u = m * v;
   REQUIRE(u.x == Approx(52.78));
   REQUIRE(u.y == Approx(-1.98));
+  const Vec2 w = m * Vec2{0.f, 0.f};
+  REQUIRE(w.x == Approx(0));
+  REQUIRE(w.y == Approx(0));
 }
 
 TEST_CASE("mat2 det", "[mat2]") {
