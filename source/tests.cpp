@@ -46,6 +46,10 @@ TEST_CASE("vec2 /=", "[vec2]") {
   a /= f;
   REQUIRE(a.x == Approx(-6.6f / f));
   REQUIRE(a.y == Approx(8.5f / f));
+
+  a /= 0;
+  REQUIRE(std::isinf(a.x));
+  REQUIRE(std::isinf(a.y));
 }
 
 TEST_CASE("vec2 +", "[vec2]") {
@@ -222,7 +226,6 @@ TEST_CASE("mat2 transpose", "[mat2]") {
   REQUIRE(i_t.e_11 == 1);
 }
 TEST_CASE("mat2 rotation matrix", "[mat2]") {
-  // Mat2 rotation_matrix(float phi);
   const float alpha = 0;
   Mat2 alpha_rot = rotation_matrix(alpha);
   REQUIRE(alpha_rot.e_00 == 1);
@@ -251,8 +254,11 @@ TEST_CASE("vec2 rotation", "[mat2]") {
   REQUIRE(v.x == Approx(4.41122f));
   REQUIRE(v.y == Approx(2.79126f));
   const Vec2 w = rotation_matrix(0.0f) * u;
-  REQUIRE(w.x == Approx(4.2f));
-  REQUIRE(w.y == Approx(-3.1f));
+  REQUIRE(w.x == Approx(u.x));
+  REQUIRE(w.y == Approx(u.y));
+  const Vec2 x = rotation_matrix(2 * M_PI) * u;
+  REQUIRE(x.x == Approx(u.x));
+  REQUIRE(x.y == Approx(u.y));
 }
 
 TEST_CASE("color constructor", "[color]") {
@@ -279,6 +285,8 @@ TEST_CASE("rectangle circumference", "[rectangle]") {
   REQUIRE(s.circumference() == Approx(0));
   Rectangle t({4.2f, 0.f}, {4.2f, 1.f}, {});
   REQUIRE(t.circumference() == Approx(2));
+  Rectangle u({6.2f, 1.6f}, {4.2f, -1.4f}, {});
+  REQUIRE(u.circumference() == Approx(10));
 }
 
 TEST_CASE("circle is_inside", "[circle]") {
@@ -286,7 +294,12 @@ TEST_CASE("circle is_inside", "[circle]") {
 
   REQUIRE(c.is_inside(Vec2{0.f, 0.f}));  // center
   REQUIRE(c.is_inside(Vec2{0.5f, -0.5f}));  // inside
+  REQUIRE(c.is_inside(Vec2{-0.5f, 0.5f}));
+  REQUIRE(c.is_inside(Vec2{0.42f, 0.12f}));
   REQUIRE(c.is_inside(Vec2{1.f, 0.f}));  // on circumference
+  REQUIRE(c.is_inside(Vec2{-1.f, 0.f}));
+  REQUIRE(c.is_inside(Vec2{0.f, 1.f}));
+  REQUIRE(c.is_inside(Vec2{0.f, -1.f}));
 
   // outside
   REQUIRE(!c.is_inside(Vec2{1.f, 1.f}));
@@ -300,13 +313,24 @@ TEST_CASE("rectangle is_inside", "[rectangle]") {
 
   REQUIRE(r.is_inside(Vec2{0.f, 0.f}));  // inside
   REQUIRE(r.is_inside(Vec2{0.5f, -0.5f}));
-  REQUIRE(r.is_inside(Vec2{1.f, 1.f}));  // corner
+  REQUIRE(r.is_inside(Vec2{1.f, 1.f}));  // corners
   REQUIRE(r.is_inside(Vec2{-1.f, 1.f}));
-  REQUIRE(r.is_inside(Vec2{1.f, -0.5f}));  // edge
+  REQUIRE(r.is_inside(Vec2{1.f, -1.f}));
+  REQUIRE(r.is_inside(Vec2{-1.f, -1.f}));
+  REQUIRE(r.is_inside(Vec2{1.f, -0.5f}));  // edges
+  REQUIRE(r.is_inside(Vec2{-1.f, -0.5f}));
+  REQUIRE(r.is_inside(Vec2{-0.5f, 1.f}));
+  REQUIRE(r.is_inside(Vec2{-0.5f, -1.f}));
 
-  REQUIRE(!r.is_inside(Vec2{1.01f, 0.f}));  // outside
+  // outside
+  REQUIRE(!r.is_inside(Vec2{1.01f, 0.f}));
   REQUIRE(!r.is_inside(Vec2{0.f, 1.01f}));
   REQUIRE(!r.is_inside(Vec2{2.f, 2.f}));
+  REQUIRE(!r.is_inside(Vec2{0.f, 2.f})); // above
+  REQUIRE(!r.is_inside(Vec2{0.f, -2.f})); // below
+  REQUIRE(!r.is_inside(Vec2{-2.f, 0.f})); // left
+  REQUIRE(!r.is_inside(Vec2{2.f, 0.f})); // right
+
 }
 
 int main(int argc, char *argv[]) { return Catch::Session().run(argc, argv); }
